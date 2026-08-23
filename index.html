@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Mis remedios · mamá</title>
+<style>
+  :root {
+    --ground: #f4f7f6;
+    --surface: #ffffff;
+    --sunk: #e9efee;
+    --ink: #1a2a2c;
+    --soft: #4d6164;
+    --faint: #7a8d8f;
+    --rule: #d5e0df;
+    --accent: #0c6b68;
+    --accent-soft: #dcefeb;
+    --am: #1a6b8a;
+    --am-soft: #e3f1f6;
+    --noon: #2a7a4a;
+    --noon-soft: #e4f3ea;
+    --pm: #5a4a8a;
+    --pm-soft: #eeeaf6;
+    --abx: #a03a22;
+    --abx-soft: #f8e8e4;
+    --on-accent: #ffffff;
+    --serif: "Iowan Old Style", Palatino, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    --toc-h: 7.2rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #101718;
+      --surface: #182122;
+      --sunk: #222c2e;
+      --ink: #e8eeee;
+      --soft: #a9b8b8;
+      --faint: #7d8e8e;
+      --rule: #2c383a;
+      --accent: #5bb8b1;
+      --accent-soft: #16302f;
+      --am: #6cb8d4;
+      --am-soft: #1a2e36;
+      --noon: #6cbc88;
+      --noon-soft: #1a3024;
+      --pm: #a99ad4;
+      --pm-soft: #2a2438;
+      --abx: #e8836a;
+      --abx-soft: #3a221c;
+      --on-accent: #102018;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 18px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap {
+    max-width: 28rem;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.85rem, 7vw, 2.25rem);
+    line-height: 1.15;
+    font-weight: 600;
+    margin: 0.2rem 0 0;
+  }
+  .lead {
+    margin: 0;
+    color: var(--soft);
+    font-size: 1.05rem;
+  }
+  .toc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 0.55rem 0 0.7rem;
+    background: color-mix(in srgb, var(--ground) 92%, transparent);
+    backdrop-filter: blur(8px);
+  }
+  .toc a {
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 0.7rem 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .toc a.abx { border-color: color-mix(in srgb, var(--abx) 45%, var(--rule)); color: var(--abx); }
+  .toc a.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .toc a.abx.is-active {
+    background: var(--abx);
+    border-color: var(--abx);
+    color: #fff;
+  }
+  section {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    overflow: hidden;
+    scroll-margin-top: var(--toc-h);
+  }
+  .sec-head {
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .sec-head.am { background: var(--am-soft); }
+  .sec-head.noon { background: var(--noon-soft); }
+  .sec-head.pm { background: var(--pm-soft); }
+  .sec-head.abx { background: var(--abx-soft); }
+  .sec-head h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-family: var(--serif);
+  }
+  .sec-head .when {
+    margin: 0;
+    color: var(--soft);
+    font-size: 0.92rem;
+  }
+  .med {
+    padding: 1rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .med-name {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .dose {
+    display: inline-flex;
+    align-self: flex-start;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.02rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+  }
+  .sec-head.am + .med .dose,
+  .sec-head.am ~ .med .dose { background: var(--am-soft); color: var(--am); }
+  .sec-head.noon ~ .med .dose { background: var(--noon-soft); color: var(--noon); }
+  .sec-head.pm ~ .med .dose { background: var(--pm-soft); color: var(--pm); }
+  .sec-head.abx ~ .med .dose { background: var(--abx-soft); color: var(--abx); }
+  .med.abx .dose { background: var(--abx-soft); color: var(--abx); }
+  .desc {
+    margin: 0;
+    color: var(--soft);
+    font-size: 1rem;
+  }
+  .tip {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--faint);
+  }
+  .note {
+    background: var(--sunk);
+    border-radius: 16px;
+    padding: 1rem 1.05rem;
+    color: var(--soft);
+    font-size: 0.98rem;
+  }
+  .note strong { color: var(--ink); }
+  footer {
+    color: var(--faint);
+    font-size: 0.82rem;
+    text-align: center;
+    padding-top: 0.5rem;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">Organización práctica · 23 ago 2026</p>
+      <h1>Mis remedios</h1>
+      <p class="lead">Solo dos momentos: mañana y noche. Qué tomar, cuándo, y para qué sirve cada uno.</p>
+    </header>
+
+    <nav class="toc" aria-label="Momentos del día">
+      <a href="#manana" data-section="manana">Mañana</a>
+      <a href="#noche" data-section="noche">Noche</a>
+    </nav>
+
+    <section id="manana">
+      <div class="sec-head am">
+        <h2>Mañana</h2>
+        <p class="when">Eutirox 1 h antes · el resto con el desayuno</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Eutirox 100 mcg</p>
+        <span class="dose">1 comprimido · 1 hora antes del desayuno</span>
+        <p class="desc">Para la tiroides. Se toma en ayunas, solo con agua, y después esperás una hora para desayunar.</p>
+        <p class="tip">Ejemplo: si desayunás a las 9:00, tómalo a las 8:00.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Venlafaxina 75 mg</p>
+        <span class="dose">1 comprimido</span>
+        <p class="desc">Te ayuda con el ánimo y la energía del día. Es de todos los días. Con el desayuno.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Fesaterox 8 mg</p>
+        <span class="dose">1 comprimido (toma de la mañana)</span>
+        <p class="desc">Para la vejiga: ayuda a que no te apuren tanto las ganas de ir al baño.</p>
+        <p class="tip">Uno en la mañana y otro en la noche, con ~12 horas de diferencia.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Melena de león</p>
+        <span class="dose">2 cápsulas</span>
+        <p class="desc">Suplemento natural. Las dos van en la mañana, con el desayuno.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Cranberry Plus</p>
+        <span class="dose">2 cápsulas</span>
+        <p class="desc">Ayuda a cuidar la orina y la vejiga. Con el desayuno, todos los días.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Multi Senior</p>
+        <span class="dose">1 comprimido</span>
+        <p class="desc">Vitaminas y minerales para el día a día. Con el desayuno.</p>
+        <p class="tip">En la caja puede decir Daily Biotic Senior: es el mismo.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">ElcalD</p>
+        <span class="dose">1 cápsula</span>
+        <p class="desc">Calcio y vitamina D para los huesos. Se toma con la comida del desayuno, no en ayunas.</p>
+      </div>
+      <div class="med abx">
+        <p class="med-name">Antibiótico (Cefadroxilo 500 mg)</p>
+        <span class="dose">2 cápsulas · solo 7 días</span>
+        <p class="desc">Para la infección de la orina. Esta es la toma de la mañana. Hay que terminarlo completo, aunque te sientas bien antes.</p>
+        <p class="tip">Si se te acaba la caja antes de completar los 7 días, avísale a Franco.</p>
+      </div>
+    </section>
+
+    <section id="noche">
+      <div class="sec-head pm">
+        <h2>Noche</h2>
+        <p class="when">Fasarax ~20:00 · Zometic a las 22:00</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Fasarax 20 mg</p>
+        <span class="dose">1 comprimido · ~20:00</span>
+        <p class="desc">Ayuda a calmar y a preparar el descanso. Dos horas antes del Zometic.</p>
+        <p class="tip">Si el Zometic es a las 22:00, este va cerca de las 20:00.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Amitriptilina 25 mg</p>
+        <span class="dose">½ comprimido</span>
+        <p class="desc">Ayuda a descansar mejor. Solo la mitad de un comprimido.</p>
+        <p class="tip">Si el comprimido se parte fácil, parte uno y guarda la otra mitad para mañana en la noche.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Mictium (mirabegrón 50 mg)</p>
+        <span class="dose">1 comprimido</span>
+        <p class="desc">Para la vejiga: ayuda a que no te den tantas ganas de ir al baño de golpe.</p>
+        <p class="tip">Es el remedio de fondo de la vejiga. No lo dejes si se te acaba: avísale a Franco.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Fesaterox 8 mg</p>
+        <span class="dose">1 comprimido (toma de la noche)</span>
+        <p class="desc">La segunda toma del día: una cada 12 horas. Esta es la de la noche.</p>
+      </div>
+      <div class="med abx">
+        <p class="med-name">Antibiótico (Cefadroxilo 500 mg)</p>
+        <span class="dose">2 cápsulas · solo 7 días</span>
+        <p class="desc">La toma de la noche: otras 2 cápsulas. Junto con la mañana suman las 4 del día.</p>
+      </div>
+      <div class="med">
+        <p class="med-name">Zometic (zopiclona 7,5 mg)</p>
+        <span class="dose">1 comprimido · 22:00</span>
+        <p class="desc">Para dormir. A las 10 de la noche, cuando te vas a la cama.</p>
+        <p class="tip">En otras cajas puede decir Fonetiz o Zonet: es lo mismo.</p>
+      </div>
+    </section>
+
+    <div class="note">
+      <strong>Si algo no cuadra con la caja o con lo que te dijo el doctor,</strong>
+      no cambies nada por tu cuenta: mándale una foto a Franco o pregúntale.
+      Esta guía es para facilitar el día a día, no reemplaza la receta.
+    </div>
+
+    <footer>
+      Guía del 23-08-2026 · reemplaza a la del 18-08 · consulta Dr. Zuloaga
+    </footer>
+  </div>
+
+<script>
+(function () {
+  const toc = document.querySelector(".toc");
+  const links = Array.from(toc.querySelectorAll("a[data-section]"));
+  const sections = links
+    .map((a) => document.getElementById(a.dataset.section))
+    .filter(Boolean);
+
+  function tocOffset() {
+    return toc.getBoundingClientRect().height + 10;
+  }
+
+  function syncTocHeight() {
+    document.documentElement.style.setProperty("--toc-h", tocOffset() + "px");
+  }
+
+  function setActive(id) {
+    links.forEach((a) => {
+      a.classList.toggle("is-active", a.dataset.section === id);
+    });
+  }
+
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = window.scrollY + el.getBoundingClientRect().top - tocOffset();
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    setActive(id);
+    history.replaceState(null, "", "#" + id);
+  }
+
+  links.forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      scrollToSection(a.dataset.section);
+    });
+  });
+
+  function observeSections() {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const hit = entries
+          .filter((en) => en.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (hit) setActive(hit.target.id);
+      },
+      {
+        rootMargin: "-" + tocOffset() + "px 0px -45% 0px",
+        threshold: [0.1, 0.25, 0.5],
+      }
+    );
+    sections.forEach((s) => obs.observe(s));
+    return obs;
+  }
+
+  let liveObserver = null;
+  function boot() {
+    syncTocHeight();
+    if (liveObserver) liveObserver.disconnect();
+    liveObserver = observeSections();
+    const fromHash = location.hash.replace(/^#/, "");
+    if (fromHash && document.getElementById(fromHash)) {
+      setActive(fromHash);
+      requestAnimationFrame(() => scrollToSection(fromHash));
+    } else if (sections[0]) {
+      setActive(sections[0].id);
+    }
+  }
+
+  boot();
+  window.addEventListener("resize", () => {
+    syncTocHeight();
+    if (liveObserver) liveObserver.disconnect();
+    liveObserver = observeSections();
+  });
+})();
+</script>
+</body>
+</html>
